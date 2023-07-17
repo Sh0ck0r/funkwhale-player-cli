@@ -35,7 +35,8 @@ public class PlayerScreen extends Screen {
 
     private void printPlayingTrack(int currentIndex) {
         String p = "Playing: " +
-                (currentIndex != -1 ? PlayListManager.getInstance().getCurrentPlayList().getItem(currentIndex).toString() : "null") + " " + "{MODE}";
+                (currentIndex != -1 ? currentIndex + 1 + ". " +
+                        PlayListManager.getInstance().getCurrentPlayList().getItem(currentIndex).toString() : "null");
         String s = "-".repeat(p.length());
         System.out.println(s);
         System.out.println(p);
@@ -59,6 +60,9 @@ public class PlayerScreen extends Screen {
         switch (parseInput[0]) {
             case "open" -> openSearchBrowser();
             case "p" -> playerManager.play();
+            case "pa" -> playerManager.pause();
+            case "re" -> playerManager.resume();
+            case "n" -> playerManager.next();
             default -> {
                 return false;
             }

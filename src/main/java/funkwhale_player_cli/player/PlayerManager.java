@@ -1,18 +1,15 @@
 package funkwhale_player_cli.player;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-
 import funkwhale_player_cli.funkwhale.FunkwhaleManager;
 import funkwhale_player_cli.playlist.PlayListManager;
-import javazoom.jl.decoder.JavaLayerException;
-import javazoom.jl.player.Player;
+
 
 public class PlayerManager {
 
     private static volatile PlayerManager instance;
+    private Player currentPlayer;
+    private boolean paused;
+
 
     public static PlayerManager getInstance() {
         PlayerManager localInstance = instance;
@@ -27,25 +24,49 @@ public class PlayerManager {
         return localInstance;
     }
 
-    private PlayerManager() {}
+    private PlayerManager() {
+        currentPlayer = AudioPlayer.getInstance();
+    }
 
     public void play() {
         String remoteAudioFile = FunkwhaleManager.getInstance().getPodURL() +
                 PlayListManager.getInstance().getCurrentPlayList().playCurrentTrack();
 
-        try {
-            InputStream fileInputStream = new URL(remoteAudioFile).openStream();
-            Player player = new Player(fileInputStream);
-            new Thread(() -> {
-                try {
-                    player.play();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }).start();
-        } catch (Exception e) {
-            e.printStackTrace();
+        new Thread(() -> {
+            try {
+                currentPlayer.play(remoteAudioFile);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }).start();
+    }
+
+    public void pause() {
+        if (currentPlayer.isPlaying()) {
+            currentPlayer.pause();
+        }
+        paused = false;
+    }
+
+    public void resume() {
+        if (currentPlayer.isPlaying()) {
+            currentPlayer.resume();
+        }
+        paused = true;
+    }
+
+    public void next() {
+        if (currentPlayer.isPlaying()) {
+            currentPlayer.stop();
         }
 
+        PlayListManager.getInstance().getCurrentPlayList().next();
+        if (!isPaused()) {
+            play();
+        }
+    }
+
+    public boolean isPaused () {
+        return paused;
     }
 }

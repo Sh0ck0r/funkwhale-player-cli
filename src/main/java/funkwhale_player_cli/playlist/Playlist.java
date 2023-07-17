@@ -40,6 +40,14 @@ public class Playlist {
         items.add(track);
     }
 
+    public void next() {
+        if (currentIndex < items.size() - 1 ) {
+            currentIndex++;
+        } else if (currentIndex == items.size() - 1) {
+            currentIndex = 0;
+        }
+    }
+
     public void print() {
         if (!items.isEmpty()) {
             printPlayList();
@@ -49,8 +57,10 @@ public class Playlist {
     }
 
     private void printPlayList() {
+        int index = 1;
         for (Track track : items) {
-            System.out.println(track);
+            System.out.println(index + ". " +track);
+            index++;
         }
     }
 }

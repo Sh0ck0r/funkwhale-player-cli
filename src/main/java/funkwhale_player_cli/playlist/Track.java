@@ -2,8 +2,6 @@ package funkwhale_player_cli.playlist;
 
 import org.json.JSONObject;
 
-import java.io.File;
-
 public class Track {
 
     private String name;
@@ -12,6 +10,7 @@ public class Track {
 
     public Track(JSONObject trackData) {
         name = trackData.get("title").toString();
+        artist = trackData.getJSONObject("artist").get("name").toString();
         listenUrl = trackData.get("listen_url").toString();
     }
 
@@ -21,6 +20,6 @@ public class Track {
 
     @Override
     public String toString() {
-        return "| " + name + " |";
+        return "| " + artist + " - " + name + " |";
     }
 }

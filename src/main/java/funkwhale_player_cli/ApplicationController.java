@@ -6,6 +6,7 @@ import funkwhale_player_cli.cli.CLIManager;
 import funkwhale_player_cli.cache.CacheManager;
 
 import java.util.Scanner;
+import java.util.logging.LogManager;
 
 public class ApplicationController {
 
@@ -16,6 +17,7 @@ public class ApplicationController {
     private Scanner scanner;
 
     public ApplicationController() {
+        LogManager.getLogManager().reset();
         cliManager = new CLIManager(this);
         funkwhaleManager = FunkwhaleManager.getInstance();
         playerManager = PlayerManager.getInstance();
